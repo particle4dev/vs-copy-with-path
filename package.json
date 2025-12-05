@@ -1,9 +1,9 @@
 {
-  "name": "copy-with-path",
-  "displayName": "Copy with Path Comment",
+  "name": "my-custom-copy-tool",
+  "displayName": "My Custom Copy Tool",
+  "publisher": "namvhoang",
   "description": "Adds context‑menu items to copy file or folder content, each wrapped with a path comment. Respects .gitignore for folders.",
   "version": "0.3.2",
-  "publisher": "ct255",
   "icon": "media/icon.png",
   "engines": {
     "vscode": "^1.80.0"
@@ -15,19 +15,19 @@
   "contributes": {
     "commands": [
       {
-        "command": "copy-with-path.copyFileContentWithPath",
+        "command": "my-custom-copy-tool.copyFileContentWithPath",
         "title": "Copy File Content with Path Comment"
       },
       {
-        "command": "copy-with-path.copyFileContentWithPathNoIgnore",
+        "command": "my-custom-copy-tool.copyFileContentWithPathNoIgnore",
         "title": "Copy File Content with Path Comment (no .gitignore)"
       },
       {
-        "command": "copy-with-path.copyFolderContentWithPath",
+        "command": "my-custom-copy-tool.copyFolderContentWithPath",
         "title": "Copy Folder Content with Path Comments"
       },
       {
-        "command": "copy-with-path.copyFolderContentWithPathNoIgnore",
+        "command": "my-custom-copy-tool.copyFolderContentWithPathNoIgnore",
         "title": "Copy Folder Content with Path Comments (ignore .gitignore)"
       }
     ],
@@ -35,17 +35,17 @@
       "explorer/context": [
         {
           "when": "!explorerResourceIsFolder",
-          "command": "copy-with-path.copyFileContentWithPath",
+          "command": "my-custom-copy-tool.copyFileContentWithPath",
           "group": "navigation@6"
         },
         {
           "when": "explorerResourceIsFolder",
-          "command": "copy-with-path.copyFolderContentWithPath",
+          "command": "my-custom-copy-tool.copyFolderContentWithPath",
           "group": "navigation@6"
         },
         {
           "when": "explorerResourceIsFolder",
-          "command": "copy-with-path.copyFolderContentWithPathNoIgnore",
+          "command": "my-custom-copy-tool.copyFolderContentWithPathNoIgnore",
           "group": "navigation@6"
         }
       ]
@@ -53,7 +53,7 @@
     "configuration": {
       "title": "Copy with Path",
       "properties": {
-        "copy-with-path.pathType": {
+        "my-custom-copy-tool.pathType": {
           "type": "string",
           "enum": [
             "relative",
@@ -62,7 +62,7 @@
           "default": "relative",
           "description": "Path style used in the header comment."
         },
-        "copy-with-path.includeCodeFence": {
+        "my-custom-copy-tool.includeCodeFence": {
           "type": "boolean",
           "default": true,
           "description": "Wrap copied text in Markdown code fences."
@@ -71,15 +71,16 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "pnpm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
+    "pretest": "pnpm run compile && pnpm run lint",
     "lint": "eslint src",
     "format": "prettier --write .",
     "check-format": "prettier --check .",
-    "test": "npm run compile && vscode-test",
-    "test:manual": "MANUAL_TEST=1 npm test"
+    "test": "pnpm run compile && vscode-test",
+    "test:manual": "MANUAL_TEST=1 pnpm test",
+    "package": "vsce package"
   },
   "dependencies": {
     "ignore": "^5.3.0"
@@ -92,6 +93,7 @@
     "@typescript-eslint/parser": "^8.28.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.7.1",
     "eslint": "^8.44.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.7.4",

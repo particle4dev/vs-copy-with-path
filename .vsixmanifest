@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 	<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
 		<Metadata>
-			<Identity Language="en-US" Id="copy-with-path" Version="0.3.2" Publisher="ct255" />
+			<Identity Language="en-US" Id="my-custom-copy-tool" Version="0.3.2" Publisher="ct255" />
 			<DisplayName>Copy with Path Comment</DisplayName>
 			<Description xml:space="preserve">Adds context‑menu items to copy file or folder content, each wrapped with a path comment. Respects .gitignore for folders.</Description>
 			<Tags></Tags>

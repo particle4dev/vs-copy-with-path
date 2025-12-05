@@ -25,19 +25,42 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.showErrorMessage(`Failed to copy ${kind}: ${msg}`);
   }
 
+  /**
+   * Builds an ignore instance by combining .gitignore AND .copyignore
+   */
   async function buildIgnore(folder: vscode.Uri) {
     const ws = vscode.workspace.getWorkspaceFolder(folder);
     if (!ws) {
-      return;
+      return ignore();
     }
 
+    const ig = ignore();
+
+    // 1. Read .gitignore
     try {
       const giUri = vscode.Uri.joinPath(ws.uri, '.gitignore');
-      const txt = Buffer.from(await vscode.workspace.fs.readFile(giUri)).toString('utf8');
-      return ignore().add(txt);
+      const stat = await vscode.workspace.fs.stat(giUri);
+      if (stat.type === vscode.FileType.File) {
+        const txt = Buffer.from(await vscode.workspace.fs.readFile(giUri)).toString('utf8');
+        ig.add(txt);
+      }
     } catch {
-      return;
+      // .gitignore missing or unreadable, skip
     }
+
+    // 2. Read .copyignore (New user config)
+    try {
+      const ciUri = vscode.Uri.joinPath(ws.uri, '.copyignore');
+      const stat = await vscode.workspace.fs.stat(ciUri);
+      if (stat.type === vscode.FileType.File) {
+        const txt = Buffer.from(await vscode.workspace.fs.readFile(ciUri)).toString('utf8');
+        ig.add(txt);
+      }
+    } catch {
+      // .copyignore missing or unreadable, skip
+    }
+
+    return ig;
   }
 
   function collectTargets(primary: vscode.Uri | undefined, selection: vscode.Uri[] | undefined): vscode.Uri[] {
@@ -121,7 +144,7 @@ export function activate(context: vscode.ExtensionContext) {
   const copyFileNoIgnore = vscode.commands.registerCommand(
     'copy-with-path.copyFileContentWithPathNoIgnore',
     async (uri: vscode.Uri, selection: vscode.Uri[]) => {
-      // Logic identical to copyFile, calling exact same helper, but separate command ID
+      // Logic identical to copyFile, calling exact same helper
       await vscode.commands.executeCommand('copy-with-path.copyFileContentWithPath', uri, selection);
     },
   );
@@ -159,8 +182,11 @@ export function activate(context: vscode.ExtensionContext) {
         const pieces: string[] = [];
 
         for (const folder of validFolders) {
+          // This now loads both .gitignore AND .copyignore
           const ig = await buildIgnore(folder);
+
           const relPattern = new vscode.RelativePattern(folder, '**/*');
+          // We filter using the combined ignore rules
           const files = (await vscode.workspace.findFiles(relPattern)).filter((f) =>
             ig ? !ig.ignores(vscode.workspace.asRelativePath(f, false)) : true,
           );
@@ -176,7 +202,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         if (!pieces.length) {
-          vscode.window.showWarningMessage('No eligible files to copy.');
+          vscode.window.showWarningMessage('No eligible files to copy (check your .gitignore or .copyignore).');
           return;
         }
 
@@ -223,7 +249,7 @@ export function activate(context: vscode.ExtensionContext) {
         const pieces: string[] = [];
 
         for (const folder of validFolders) {
-          // DIFFERENCE: Does not call buildIgnore
+          // DIFFERENCE: Does NOT call buildIgnore, ignores all rules
           const relPattern = new vscode.RelativePattern(folder, '**/*');
           const files = await vscode.workspace.findFiles(relPattern);
 
