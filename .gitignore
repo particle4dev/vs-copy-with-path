@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build Output
+out/
+dist/
+*.js.map
+
+# VS Code Extension Packaging
+*.vsix
+
+# Testing & Coverage
+.vscode-test/
+coverage/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# VS Code directory (optional)
+# We usually want to commit launch.json/tasks.json, but ignore local history
+.history/
