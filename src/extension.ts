@@ -4,7 +4,7 @@ import ignore from 'ignore';
 
 export function activate(context: vscode.ExtensionContext) {
   //---------------------------------- helpers ---------------------------------
-  const cfg = () => vscode.workspace.getConfiguration('copy-with-path');
+  const cfg = () => vscode.workspace.getConfiguration('my-custom-copy-tool');
 
   function formatPath(uri: vscode.Uri): string {
     const style = cfg().get<string>('pathType', 'relative');
@@ -103,7 +103,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   //---------------------------------- file ------------------------------------
   const copyFile = vscode.commands.registerCommand(
-    'copy-with-path.copyFileContentWithPath',
+    'my-custom-copy-tool.copyFileContentWithPath',
     async (uri: vscode.Uri, selection: vscode.Uri[]) => {
       const initial = collectTargets(uri, selection);
       const targets = initial.length
@@ -142,17 +142,17 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(copyFile);
 
   const copyFileNoIgnore = vscode.commands.registerCommand(
-    'copy-with-path.copyFileContentWithPathNoIgnore',
+    'my-custom-copy-tool.copyFileContentWithPathNoIgnore',
     async (uri: vscode.Uri, selection: vscode.Uri[]) => {
       // Logic identical to copyFile, calling exact same helper
-      await vscode.commands.executeCommand('copy-with-path.copyFileContentWithPath', uri, selection);
+      await vscode.commands.executeCommand('my-custom-copy-tool.copyFileContentWithPath', uri, selection);
     },
   );
   context.subscriptions.push(copyFileNoIgnore);
 
   //---------------------------------- folder ----------------------------------
   const copyFolder = vscode.commands.registerCommand(
-    'copy-with-path.copyFolderContentWithPath',
+    'my-custom-copy-tool.copyFolderContentWithPath',
     async (uri: vscode.Uri, selection: vscode.Uri[]) => {
       const folders = collectTargets(uri, selection);
       if (!folders.length) {
@@ -219,7 +219,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(copyFolder);
 
   const copyFolderNoIgnore = vscode.commands.registerCommand(
-    'copy-with-path.copyFolderContentWithPathNoIgnore',
+    'my-custom-copy-tool.copyFolderContentWithPathNoIgnore',
     async (uri: vscode.Uri, selection: vscode.Uri[]) => {
       const folders = collectTargets(uri, selection);
       if (!folders.length) {
