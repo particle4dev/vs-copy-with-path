@@ -1,0 +1,105 @@
+{
+  "name": "copy-with-path",
+  "displayName": "Copy with Path Comment",
+  "description": "Adds context‑menu items to copy file or folder content, each wrapped with a path comment. Respects .gitignore for folders.",
+  "version": "0.3.2",
+  "publisher": "ct255",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "copy-with-path.copyFileContentWithPath",
+        "title": "Copy File Content with Path Comment"
+      },
+      {
+        "command": "copy-with-path.copyFileContentWithPathNoIgnore",
+        "title": "Copy File Content with Path Comment (no .gitignore)"
+      },
+      {
+        "command": "copy-with-path.copyFolderContentWithPath",
+        "title": "Copy Folder Content with Path Comments"
+      },
+      {
+        "command": "copy-with-path.copyFolderContentWithPathNoIgnore",
+        "title": "Copy Folder Content with Path Comments (ignore .gitignore)"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "!explorerResourceIsFolder",
+          "command": "copy-with-path.copyFileContentWithPath",
+          "group": "navigation@6"
+        },
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "copy-with-path.copyFolderContentWithPath",
+          "group": "navigation@6"
+        },
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "copy-with-path.copyFolderContentWithPathNoIgnore",
+          "group": "navigation@6"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Copy with Path",
+      "properties": {
+        "copy-with-path.pathType": {
+          "type": "string",
+          "enum": [
+            "relative",
+            "absolute"
+          ],
+          "default": "relative",
+          "description": "Path style used in the header comment."
+        },
+        "copy-with-path.includeCodeFence": {
+          "type": "boolean",
+          "default": true,
+          "description": "Wrap copied text in Markdown code fences."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "format": "prettier --write .",
+    "check-format": "prettier --check .",
+    "test": "npm run compile && vscode-test",
+    "test:manual": "MANUAL_TEST=1 npm test"
+  },
+  "dependencies": {
+    "ignore": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.7.4",
+    "typescript": "^5.1.6"
+  },
+  "__metadata": {
+    "installedTimestamp": 1764487900146,
+    "targetPlatform": "undefined",
+    "size": 2777917
+  }
+}
